@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PATH = "$PATH:\Users\DG\Documents\GitHub\Clone\PortfolioTracker"
+    }
+
     stages {
         stage('Build') {
             steps {
