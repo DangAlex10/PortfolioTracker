@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PATH = "$PATH:\Users\DG\Documents\GitHub\Clone\PortfolioTracker"
-    }
-
     stages {
         stage('Build') {
             steps {
@@ -16,6 +12,7 @@ pipeline {
             steps {
                 echo "Testing"
                 sh 'pip install pytest'
+                sh '/Users/DG/Documents/GitHub/Clone/PortfolioTracker'
                 sh 'pytest'
             }
         }
