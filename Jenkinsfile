@@ -12,7 +12,6 @@ pipeline {
             steps {
                 echo "Testing"
                 sh 'pip install pytest'
-                sh 'which pytest'
             }
         }
   }
