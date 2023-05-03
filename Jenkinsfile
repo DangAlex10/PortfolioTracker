@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo "Testing"
                 sh 'pip install pytest'
-                sh '/Users/DG/Documents/GitHub/Clone/PortfolioTracker'
+                sh 'test_file.py'
                 sh 'pytest'
             }
         }
