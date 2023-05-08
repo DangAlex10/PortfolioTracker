@@ -1,20 +1,25 @@
-import pytest
-from unittest.mock import patch
+# content of test_functions.py
+
 from functions import get_data
 
-@pytest.mark.parametrize("symbol, expected_name", [
-    ("AAPL", "Apple Inc."),
-    ("GOOGL", "Alphabet Inc.")
-])
-@patch("webpage.views.yf.Ticker")
-def test_get_data(mock_ticker, symbol, expected_name):
-    # Create a mock Ticker object
-    mock_info = {"longName": expected_name, "regularMarketPrice": 100, "regularMarketChange": 1.0, "regularMarketChangePercent": 1.0, "marketCap": 1000000000, "regularMarketVolume": 1000000}
-    mock_ticker.return_value.info = mock_info
-
-    # Call the get_data function with the given symbol
+def test_get_data_valid_symbol():
+    symbol = 'AAPL' # Apple Inc. stock symbol
     data = get_data(symbol)
+    assert data['symbol'] == symbol
+    assert data['name'] == 'Apple Inc.'
+    assert data['price'][0] == '$'
+    assert data['change'] is not None
+    assert data['percent_change'][-1] == '%'
+    assert data['market_cap'] is not None
+    assert data['volume'] is not None
 
-    # Check that the returned data is correct
-    assert data["symbol"] == symbol
-    assert data["name"] == expected_name
+def test_get_data_invalid_symbol():
+    symbol = 'INVALID'
+    data = get_data(symbol)
+    assert data['symbol'] == symbol
+    assert data['name'] is None
+    assert data['price'] is None
+    assert data['change'] is None
+    assert data['percent_change'] is None
+    assert data['market_cap'] is None
+    assert data['volume'] is None
