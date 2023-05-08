@@ -1,7 +1,6 @@
 import pytest
 import json
 from unittest import mock
-from unittest.mock import MagicMock
 from unittest.mock import patch
 import pandas as pd
 import yfinance as yf
