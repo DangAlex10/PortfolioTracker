@@ -1,26 +1,29 @@
-import functions
 import pytest
+from unittest.mock import Mock
+from functions import get_data
+
 
 @pytest.fixture
 def mock_yf_ticker(mocker):
-    mock_ticker = mocker.Mock()
-    mock_ticker.info = {
+    mock = mocker.patch("yfinance.Ticker")
+    mock.return_value.info = {
         'longName': 'Apple Inc.',
-        'regularMarketPrice': 138.95,
-        'regularMarketChange': 0.49,
-        'regularMarketChangePercent': 0.35,
-        'marketCap': 234400000000,
-        'regularMarketVolume': 7900000
+        'regularMarketPrice': 130.21,
+        'regularMarketChange': 2.32,
+        'regularMarketChangePercent': 1.81,
+        'marketCap': 2200000000000,
+        'regularMarketVolume': 10000000
     }
-    mocker.patch('functions.yf.Ticker', return_value=mock_ticker)
+    return mock
 
-def test_get_data(mock_yf_ticker):
-    data = functions.get_data('AAPL')
-    assert isinstance(data, dict)
-    assert 'symbol' in data
-    assert 'name' in data
-    assert 'price' in data
-    assert 'change' in data
-    assert 'percent_change' in data
-    assert 'market_cap' in data
-    assert 'volume' in data
+
+@pytest.mark.usefixtures("mock_yf_ticker")
+def test_get_data():
+    data = get_data('AAPL')
+    assert data['symbol'] == 'AAPL'
+    assert data['name'] == 'Apple Inc.'
+    assert data['price'] == '130.21'
+    assert data['change'] == 2.32
+    assert data['percent_change'] == '1.81'
+    assert data['market_cap'] == '2.20T'
+    assert data['volume'] == '10.00M'
