@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock
-from functions import get_data
+from functions import get_data, get_chart
 
 
 @pytest.fixture
@@ -27,3 +27,8 @@ def test_get_data():
     assert data['percent_change'] == '1.81'
     assert data['market_cap'] == '2.20 trillion'
     assert data['volume'] == '10.00 million'
+
+@pytest.mark.parametrize("symbol", ["AAPL", "GOOG", "MSFT"])
+def test_get_chart(symbol):
+    chart = get_chart(symbol)
+    assert chart is not None
