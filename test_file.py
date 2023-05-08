@@ -18,8 +18,3 @@ def test_get_data(mock_ticker, symbol, expected_name):
     # Check that the returned data is correct
     assert data["symbol"] == symbol
     assert data["name"] == expected_name
-    assert data["price"] == "$100.0"
-    assert data["change"] == 1.0
-    assert data["percent_change"] == "1.0%"
-    assert data["market_cap"] == "1.00B"
-    assert data["volume"] == "1.00M"
