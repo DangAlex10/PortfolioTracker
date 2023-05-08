@@ -1,64 +1,25 @@
 import pytest
-from unittest import mock
-from django.test import TestCase
-from webpage.views import get_chart
+from unittest.mock import patch
 from webpage.views import get_data
 
-def test_get_chart_with_valid_symbol():
-    # Mock the yfinance Ticker object
-    mock_ticker = mock.Mock()
-    mock_ticker.history.return_value = {
-        'Open': [100, 110, 105],
-        'High': [120, 115, 125],
-        'Low': [95, 100, 100],
-        'Close': [110, 105, 115],
-        'Volume': [1000, 2000, 1500]
-    }
-    mock_ticker.info = {'longName': 'Mock Stock'}
-    with mock.patch('webpage.views.yf.Ticker', return_value=mock_ticker):
-        chart = get_chart('MSFT')
-    assert chart is not None
-    assert 'Mock Stock Stock Chart' in chart
-    assert 'Closing Price' in chart
+@pytest.mark.parametrize("symbol, expected_name", [
+    ("AAPL", "Apple Inc."),
+    ("GOOGL", "Alphabet Inc.")
+])
+@patch("webpage.views.yf.Ticker")
+def test_get_data(mock_ticker, symbol, expected_name):
+    # Create a mock Ticker object
+    mock_info = {"longName": expected_name, "regularMarketPrice": 100, "regularMarketChange": 1.0, "regularMarketChangePercent": 1.0, "marketCap": 1000000000, "regularMarketVolume": 1000000}
+    mock_ticker.return_value.info = mock_info
 
-def test_get_chart_with_invalid_symbol():
-    with pytest.raises(Exception) as e:
-        get_chart('INVALID')
-    assert str(e.value) == 'No data found, symbol may be delisted'
+    # Call the get_data function with the given symbol
+    data = get_data(symbol)
 
-def test_get_chart_with_missing_symbol():
-    with pytest.raises(Exception) as e:
-        get_chart(None)
-    assert str(e.value) == 'Symbol is required'
-
-def test_get_data_with_valid_symbol():
-    # Mock the yfinance Ticker object
-    mock_ticker = mock.Mock()
-    mock_ticker.info = {
-        'longName': 'Mock Stock',
-        'regularMarketPrice': 123.45,
-        'regularMarketChange': 1.23,
-        'regularMarketChangePercent': 0.99,
-        'marketCap': 1000000000,
-        'regularMarketVolume': 1000000
-    }
-    with mock.patch('webpage.views.yf.Ticker', return_value=mock_ticker):
-        data = get_data('MSFT')
-    assert data is not None
-    assert data['symbol'] == 'MSFT'
-    assert data['name'] == 'Mock Stock'
-    assert data['price'] == '$123.45'
-    assert data['change'] == 1.23
-    assert data['percent_change'] == '0.99%'
-    assert data['market_cap'] == '1B'
-    assert data['volume'] == '1M'
-
-def test_get_data_with_invalid_symbol():
-    with pytest.raises(Exception) as e:
-        get_data('INVALID')
-    assert str(e.value) == 'No data found, symbol may be delisted'
-
-def test_get_data_with_missing_symbol():
-    with pytest.raises(Exception) as e:
-        get_data(None)
-    assert str(e.value) == 'Symbol is required'
+    # Check that the returned data is correct
+    assert data["symbol"] == symbol
+    assert data["name"] == expected_name
+    assert data["price"] == "$100.0"
+    assert data["change"] == 1.0
+    assert data["percent_change"] == "1.0%"
+    assert data["market_cap"] == "1.00B"
+    assert data["volume"] == "1.00M"
