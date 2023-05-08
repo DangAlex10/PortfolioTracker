@@ -8,7 +8,7 @@ pipeline {
                 sh 'pip install -r requirements.txt'
             }
         }
-        stage('Test') {z
+        stage('Test') {
             steps {
                 echo "Testing"
                 sh 'pip install pytest'
