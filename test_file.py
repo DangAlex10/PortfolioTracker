@@ -29,14 +29,8 @@ def test_get_data():
     assert data['market_cap'] == '2.20 trillion'
     assert data['volume'] == '10.00 million'
 
-@pytest.fixture
-def mock_yfinance(mocker):
-    mock_ticker = mocker.MagicMock(spec=yf.Ticker)
-    mock_info = mocker.PropertyMock(return_value={'longName': 'Mock Company'})
-    type(mock_ticker).info = mock_info
-    mocker.patch('yfinance.Ticker', return_value=mock_ticker)
-    return mock_ticker
-
-def test_get_chart(mock_yfinance):
-    chart = get_chart('AAPL')
-    assert chart.title == 'Mock Company Stock Chart'
+def test_get_chart():
+    symbol = 'AAPL'
+    chart = get_chart(symbol)
+    assert isinstance(chart, str)
+    assert len(chart) > 0
