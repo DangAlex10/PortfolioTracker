@@ -25,5 +25,5 @@ def test_get_data():
     assert data['price'] == '130.21'
     assert data['change'] == 2.32
     assert data['percent_change'] == '1.81'
-    assert data['market_cap'] == '2.20T'
-    assert data['volume'] == '10.00M'
+    assert data['market_cap'] == '2.20 trillion'
+    assert data['volume'] == '10.00 million'
