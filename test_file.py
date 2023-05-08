@@ -1,7 +1,7 @@
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PortfolioTracker.PortfolioTrackerProject.settings')
 import django
-django.setup()
+##django.setup()
 
 import pytest
 from unittest.mock import patch
