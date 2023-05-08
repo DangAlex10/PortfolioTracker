@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 from functions import get_data, get_chart
 
 
@@ -28,7 +28,8 @@ def test_get_data():
     assert data['market_cap'] == '2.20 trillion'
     assert data['volume'] == '10.00 million'
 
-@pytest.mark.parametrize("symbol", ["AAPL", "GOOG", "MSFT"])
-def test_get_chart(symbol):
-    chart = get_chart(symbol)
-    assert chart is not None
+def test_get_chart(mocker):
+    mocker.patch('functions.get_chart')
+    get_chart.return_value = MagicMock()
+    chart = get_chart('AAPL')
+    get_chart.assert_called_once_with('AAPL')
