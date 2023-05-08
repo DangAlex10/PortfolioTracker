@@ -1,11 +1,6 @@
-import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PortfolioTracker.PortfolioTrackerProject.settings')
-import django
-##django.setup()
-
 import pytest
 from unittest.mock import patch
-from webpage.views import get_data
+from functions import get_data
 
 @pytest.mark.parametrize("symbol, expected_name", [
     ("AAPL", "Apple Inc."),
