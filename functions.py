@@ -10,9 +10,9 @@ def get_data(symbol):
     data = {
         'symbol': symbol,
         'name': stock.info['longName'],
-        'price': "$" + str(stock.info['regularMarketPrice']),
+        'price': str(stock.info['regularMarketPrice']),
         'change': stock.info['regularMarketChange'],
-        'percent_change': str(round(stock.info['regularMarketChangePercent'], 2)) +"%",
+        'percent_change': str(round(stock.info['regularMarketChangePercent'], 2)),
         'market_cap': humanize.intword(stock.info['marketCap'], format='%.2f'),
         'volume': humanize.intword(stock.info['regularMarketVolume'], format='%.2f')
     }
