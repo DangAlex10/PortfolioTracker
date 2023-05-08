@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'myproject:latest'
-        CONTAINER_NAME = 'myproject'
+        IMAGE_NAME = 'PortfolioTracker:latest'
+        CONTAINER_NAME = 'PortfolioTracker'
     }
 
     stages {
