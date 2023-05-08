@@ -16,10 +16,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        success {
-            input "Pipeline succeeded. Press OK to run again."
-        }
-    }
 }
