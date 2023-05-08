@@ -1,32 +1,29 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Build Docker image') {
+        stage('Build') {
             steps {
-                sh 'docker build -t PortfolioTracker .'
-            }
-        }
+                // Clone the GitHub repository
+                git 'https://github.com/DangAlex10/PortfolioTracker.git'
 
-        stage('Run tests') {
-            steps {
-                sh 'docker run PortfolioTracker python manage.py test'
+                // Build the Docker image
+                sh 'docker build -t portfolio_tracker .'
+
+                // Push the Docker image to Docker Hub or another registry
+                sh 'docker push admin/portfolio_tracker'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker-compose up -d'
-            }
-        }
-    }
+                // Stop and remove the existing container
+                sh 'docker stop portfolio_tracker || true'
+                sh 'docker rm portfolio_tracker || true'
 
-    post {
-        success {
-            sh 'echo "Build successful - deploying to production"'
-        }
-        failure {
-            sh 'echo "Build failed - deployment aborted"'
+                // Run the Docker container
+                sh 'docker run -d -p 8000:8000 --name portfolio_tracker portfolio_tracker'
+            }
         }
     }
 }
