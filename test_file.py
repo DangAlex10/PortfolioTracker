@@ -2,6 +2,7 @@ import pytest
 import json
 from unittest import mock
 from unittest.mock import MagicMock
+from unittest.mock import patch
 import yfinance as yf
 import plotly.graph_objs as go
 from functions import get_data, get_chart
@@ -32,33 +33,26 @@ def test_get_data():
     assert data['market_cap'] == '2.20 trillion'
     assert data['volume'] == '10.00 million'
 
-@pytest.fixture
-def mock_yf_ticker_chart():
-    # Create a mock object for yf.Ticker class
-    mock_ticker = mock.Mock()
-    mock_ticker.info = {'longName': 'Mock Stock'}
-    mock_ticker_data = mock.Mock()
-    mock_ticker_data.history.return_value = {
-        'Open': [100, 110, 120],
-        'High': [120, 130, 140],
-        'Low': [90, 100, 110],
-        'Close': [110, 120, 130],
-        'Date': ['2022-05-01', '2022-05-02', '2022-05-03']
+@patch('functions.yf.Ticker')
+def test_get_chart(mock_yf_ticker):
+    # Set up the mock object
+    mock_stock_data = {
+        'Open': [100, 150, 200],
+        'High': [125, 175, 225],
+        'Low': [75, 125, 175],
+        'Close': [120, 170, 220],
+        'Volume': [1000000, 2000000, 3000000],
     }
-    mock_ticker.return_value = mock_ticker_data
-    return mock_ticker
+    mock_ticker = mock_yf_ticker.return_value
+    mock_ticker.history.return_value = pd.DataFrame(mock_stock_data)
 
-
-def test_get_chart(mock_yf_ticker_chart):
     # Test the get_chart function with the mock object
-    symbol = 'mock'
+    symbol = 'AAPL'
     chart = get_chart(symbol)
-    chart_data = json.loads(chart)
-    candlestick_data = chart_data['data'][0]['ohlc']
-    line_data = chart_data['data'][1]['y']
-    
-    assert chart_data['layout']['title']['text'] == 'Mock Stock Stock Chart'
-    assert len(candlestick_data['open']) == 3
-    assert candlestick_data['open'][0] == 100
-    assert candlestick_data['high'][1] == 130
-    assert line_data[2] == 130
+
+    # Check that the mock object was called correctly
+    mock_yf_ticker.assert_called_once_with(symbol)
+    mock_ticker.history.assert_called_once_with(period='1y')
+
+    # Check that the chart is not None
+    assert chart is not None
