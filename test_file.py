@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
+import yfinance as yf
 from functions import get_data, get_chart
 
 
@@ -28,8 +29,14 @@ def test_get_data():
     assert data['market_cap'] == '2.20 trillion'
     assert data['volume'] == '10.00 million'
 
-def test_get_chart(mocker):
-    mocker.patch('functions.get_chart')
-    get_chart.return_value = MagicMock()
+@pytest.fixture
+def mock_yfinance(mocker):
+    mock_ticker = mocker.MagicMock(spec=yf.Ticker)
+    mock_info = mocker.PropertyMock(return_value={'longName': 'Mock Company'})
+    type(mock_ticker).info = mock_info
+    mocker.patch('yfinance.Ticker', return_value=mock_ticker)
+    return mock_ticker
+
+def test_get_chart(mock_yfinance):
     chart = get_chart('AAPL')
-    get_chart.assert_called_once_with('AAPL')
+    assert chart.title == 'Mock Company Stock Chart'
