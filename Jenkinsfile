@@ -15,5 +15,11 @@ pipeline {
                 sh 'python3 -m pytest'
             }
         }
-  }
+    }
+
+    post {
+        success {
+            input "Pipeline succeeded. Press OK to run again."
+        }
+    }
 }
