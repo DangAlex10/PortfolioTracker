@@ -16,7 +16,6 @@ def mock_yf_ticker(mocker):
     }
     return mock
 
-print('hello')
 @pytest.mark.usefixtures("mock_yf_ticker")
 def test_get_data():
     data = get_data('AAPL')
