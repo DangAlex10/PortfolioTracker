@@ -4,7 +4,7 @@ from django.test import TestCase
 from webpage.views import get_chart
 from webpage.views import get_data
 
-def test_get_chart_with_valid_symbol(self):
+def test_get_chart_with_valid_symbol():
     # Mock the yfinance Ticker object
     mock_ticker = mock.Mock()
     mock_ticker.history.return_value = {
@@ -21,17 +21,17 @@ def test_get_chart_with_valid_symbol(self):
     assert 'Mock Stock Stock Chart' in chart
     assert 'Closing Price' in chart
 
-def test_get_chart_with_invalid_symbol(self):
+def test_get_chart_with_invalid_symbol():
     with pytest.raises(Exception) as e:
         get_chart('INVALID')
     assert str(e.value) == 'No data found, symbol may be delisted'
 
-def test_get_chart_with_missing_symbol(self):
+def test_get_chart_with_missing_symbol():
     with pytest.raises(Exception) as e:
         get_chart(None)
     assert str(e.value) == 'Symbol is required'
 
-def test_get_data_with_valid_symbol(self):
+def test_get_data_with_valid_symbol():
     # Mock the yfinance Ticker object
     mock_ticker = mock.Mock()
     mock_ticker.info = {
@@ -53,12 +53,12 @@ def test_get_data_with_valid_symbol(self):
     assert data['market_cap'] == '1B'
     assert data['volume'] == '1M'
 
-def test_get_data_with_invalid_symbol(self):
+def test_get_data_with_invalid_symbol():
     with pytest.raises(Exception) as e:
         get_data('INVALID')
     assert str(e.value) == 'No data found, symbol may be delisted'
 
-def test_get_data_with_missing_symbol(self):
+def test_get_data_with_missing_symbol():
     with pytest.raises(Exception) as e:
         get_data(None)
     assert str(e.value) == 'Symbol is required'
