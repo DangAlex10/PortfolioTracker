@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock
-from functions import get_data, get_chart
+from functions import get_data
 
 
 @pytest.fixture
