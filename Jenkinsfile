@@ -1,29 +1,32 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Build') {
-      steps {
-        sh 'docker build -t upbeat_mendel .'
-      }
+    stages {
+        stage('Build Docker image') {
+            steps {
+                sh 'docker build -t PortfolioTracker .'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'docker run PortfolioTracker python manage.py test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
     }
 
-    stage('Test') {
-      steps {
-        sh 'docker run upbeat_mendel python manage.py test'
-      }
+    post {
+        success {
+            sh 'echo "Build successful - deploying to production"'
+        }
+        failure {
+            sh 'echo "Build failed - deployment aborted"'
+        }
     }
-
-    stage('Staging') {
-      steps {
-        sh 'docker-compose -f docker-compose.staging.yml up -d'
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        sh 'docker-compose -f docker-compose.prod.yml up -d'
-      }
-    }
-  }
 }

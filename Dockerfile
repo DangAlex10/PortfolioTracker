@@ -4,13 +4,13 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
-COPY requirements.txt /code/
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
 RUN apt-get update && apt-get install -y git
 
-COPY . /code/ 
+COPY . .
 
 EXPOSE 8000
 
