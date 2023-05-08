@@ -4,13 +4,13 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -t your-image-name .'
+        sh 'docker build -t upbeat_mendel .'
       }
     }
 
     stage('Test') {
       steps {
-        sh 'docker run your-image-name python manage.py test'
+        sh 'docker run upbeat_mendel python manage.py test'
       }
     }
 
