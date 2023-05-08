@@ -1,6 +1,7 @@
 import pytest
 import json
-from unittest.mock import MagicMock, mock
+from unittest import mock
+from unittest.mock import MagicMock
 import yfinance as yf
 import plotly.graph_objs as go
 from functions import get_data, get_chart
