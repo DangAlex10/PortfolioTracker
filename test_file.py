@@ -14,7 +14,7 @@ def mock_yf_ticker(mocker):
         'marketCap': 2200000000000,
         'regularMarketVolume': 10000000
     }
-    return moc
+    return mock
 
 @pytest.mark.usefixtures("mock_yf_ticker")
 def test_get_data():
